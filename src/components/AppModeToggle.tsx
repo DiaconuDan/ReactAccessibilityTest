@@ -29,6 +29,7 @@ const AppModeToggle: React.FunctionComponent = () => {
         unCheckedChildren={AppMode.READ}
         onChange={onToggle}
         defaultChecked={isEnabled}
+        data-testid="appToggle"
       />
     </ToggleWrapper>
   );

@@ -28,7 +28,7 @@ const AppModeInitialState = {
 
 const Context = createContext<AppModeContextInterface>(AppModeInitialState);
 
-const AppModeContext = ({ children }: AppModeProps) => {
+export const AppModeContext = ({ children }: AppModeProps) => {
   const [appMode, setAppMode] = useState(AppModeInitialState.appMode);
 
   return (

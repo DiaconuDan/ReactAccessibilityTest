@@ -16,10 +16,11 @@ import {
   OverlapInterval,
   DROPDOWN_ERROR_MESSAGE,
   DATES_ERROR_MESSAGE,
+  REQUIRED_ERROR_MESSAGE
 } from "./constants";
 
 const schema = yup.object().shape({
-  numericInput: yup.number().required("This field is required"),
+  numericInput: yup.number().required(REQUIRED_ERROR_MESSAGE),
 });
 
 const FormPage: React.FunctionComponent = () => {
@@ -120,10 +121,13 @@ const FormPage: React.FunctionComponent = () => {
                   optionFilterProp="children"
                   {...field}
                   disabled={isFormDisabled}
+                  data-testid="dropdown"
                 >
                   <Option value="A">A</Option>
                   <Option value="B">B</Option>
-                  <Option value="C">C</Option>
+                  <Option value="C" data-testid="optionC">
+                    C
+                  </Option>
                 </Select>
                 <ValidationError>{errors?.dropdown?.message}</ValidationError>
               </>
@@ -152,7 +156,7 @@ const FormPage: React.FunctionComponent = () => {
             return (
               <>
                 <label> Input number </label>
-                <Input {...field} type="number" disabled={isFormDisabled} />
+                <Input {...field} type="number" disabled={isFormDisabled}   data-testid="numericInput"/>
                 <ValidationError>
                   {errors?.numericInput?.message}
                 </ValidationError>
@@ -214,13 +218,13 @@ const FormPage: React.FunctionComponent = () => {
             );
           }}
         />
-          <StyledButton
-            htmlType="submit"
-            color={submitButtonColor}
-            disabled={isFormDisabled}
-          >
-            Submit
-          </StyledButton>
+        <StyledButton
+          htmlType="submit"
+          color={submitButtonColor}
+          disabled={isFormDisabled}
+        >
+          Submit
+        </StyledButton>
       </form>
     </Wrapper>
   );
