@@ -8,3 +8,11 @@ export const StyledTable = styled(Table)`
 export const Wrapper = styled.div`
   padding: 15px;
 `;
+
+export const Centered = styled.div`
+  display: flex;
+  text-align:center;
+  justify-content: center;
+  padding-top:50px;
+`;
+

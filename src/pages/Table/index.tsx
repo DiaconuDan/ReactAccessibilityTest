@@ -5,7 +5,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { Input } from "antd";
 import AppModeToggle from "../../components/AppModeToggle";
-import { StyledTable, Wrapper } from "./styles";
+import { StyledTable, Wrapper, Centered } from "./styles";
 import { MAX_LIMIT_DATA_COUNT, mapDatatoTableFields,API } from "./constants";
 import { TableRow } from "./types";
 
@@ -63,10 +63,10 @@ const TablePage: React.FunctionComponent = () => {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Centered>Loading...</Centered>;
   }
   if (isError) {
-    return <div>Error on fetching </div>;
+    return <Centered>Error on fetching </Centered>;
   }
 
   return (

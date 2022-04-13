@@ -2,13 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu } from "antd";
 import { FileTextOutlined, TableOutlined } from "@ant-design/icons";
-import styled from 'styled-components'
 import "antd/dist/antd.css";
 import "../index.css";
 
-export const StyledLink = styled(Link)`
-  color:
-`
 
 enum Pages {
   FORM = "FORM",
