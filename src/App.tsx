@@ -1,26 +1,72 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { createContext, useState, useContext } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Form from "./pages/Form";
+import Table from "./pages/Table/index";
+import Navbar from "./components/Navbar";
+import { QueryClient, QueryClientProvider } from "react-query";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const queryClient = new QueryClient();
+
+export enum AppMode {
+  EDIT = "EDIT",
+  READ = "READ",
 }
 
-export default App;
+interface AppModeContextInterface {
+  appMode: AppMode;
+  setAppMode(value: AppMode): void;
+}
+
+interface AppModeProps {
+  children: React.ReactNode;
+}
+
+const AppModeInitialState = {
+  appMode: AppMode.READ,
+  setAppMode: () => {},
+};
+
+const Context = createContext<AppModeContextInterface>(AppModeInitialState);
+
+const AppModeContext = ({ children }: AppModeProps) => {
+  const [appMode, setAppMode] = useState(AppModeInitialState.appMode);
+
+  return (
+    <Context.Provider
+      value={{
+        appMode,
+        setAppMode,
+      }}
+    >
+      {children}
+    </Context.Provider>
+  );
+};
+
+export const useAppMode = () => {
+  const context = useContext(Context);
+  const { appMode, setAppMode } = context;
+
+  return {
+    appMode,
+    setAppMode,
+  };
+};
+
+const Application: React.FunctionComponent = () => {
+  return (
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <AppModeContext>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Form />} />
+            <Route path="table" element={<Table />} />
+          </Routes>
+        </AppModeContext>
+      </QueryClientProvider>
+    </BrowserRouter>
+  );
+};
+
+export default Application;
