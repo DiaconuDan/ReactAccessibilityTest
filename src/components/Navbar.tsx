@@ -5,7 +5,6 @@ import { FileTextOutlined, TableOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 import "../index.css";
 
-
 enum Pages {
   FORM = "FORM",
   TABLE = "TABLE",

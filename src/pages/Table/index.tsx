@@ -1,17 +1,21 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { debounce } from "lodash";
-import { useAppMode, AppMode } from "../../App";
-import { useQuery } from "react-query";
 import axios from "axios";
 import { Input } from "antd";
+import { debounce } from "lodash";
+import { useAppMode } from "../../context/index";
+import { AppMode } from '../../context/types';
+import { useQuery } from "react-query";
 import AppModeToggle from "../../components/AppModeToggle";
 import { StyledTable, Wrapper, Centered } from "./styles";
-import { MAX_LIMIT_DATA_COUNT, mapDatatoTableFields,API } from "./constants";
+import { MAX_LIMIT_DATA_COUNT, mapDatatoTableFields, API } from "./constants";
 import { TableRow } from "./types";
 
 const fetchData = async () => {
   const { data } = await axios.get(API);
+
   const results: TableRow[] = mapDatatoTableFields(
+    // this might actually need to be an infinite query
+    // based on next and fetched until 20 results. Was not sure though. Happy to adjust it though if needed
     data?.results?.slice(0, MAX_LIMIT_DATA_COUNT - 1)
   );
 
@@ -39,7 +43,12 @@ const TablePage: React.FunctionComponent = () => {
       setActiveTableData(data);
     } else {
       const updatedTableValues = data?.filter((element: TableRow) => {
-        return element.name.toLocaleUpperCase().includes(filter.toLocaleUpperCase());
+        // in requirements this
+        // was just a filter. I went for the name filter, but happy to adjust it to
+        // any filters needed.
+        return element.name
+          .toLocaleUpperCase()
+          .includes(filter.toLocaleUpperCase());
       });
 
       setActiveTableData(updatedTableValues);

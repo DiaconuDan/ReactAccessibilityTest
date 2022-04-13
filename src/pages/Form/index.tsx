@@ -1,26 +1,33 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm, SubmitHandler, Controller, useWatch } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import DatePicker from "react-datepicker";
-import "antd/dist/antd.css";
-import "react-datepicker/dist/react-datepicker.css";
+import { isPast, isWithinInterval, endOfDay } from "date-fns";
+import * as yup from "yup";
+import { Input, Select } from "antd";
 import AppModeToggle from "../../components/AppModeToggle";
 import { StyledButton, ValidationError, Wrapper } from "./styles";
 import { IFormInputs } from "./types";
-import { Input, Select } from "antd";
-import { useForm, SubmitHandler, Controller, useWatch } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { isPast, isWithinInterval, endOfDay } from "date-fns";
-import { AppMode, useAppMode } from "../../App";
+import { AppMode } from "../../context/types";
+import { useAppMode} from "../../context/index"
 import {
   OverlapInterval,
   DROPDOWN_ERROR_MESSAGE,
   DATES_ERROR_MESSAGE,
-  REQUIRED_ERROR_MESSAGE
+  REQUIRED_ERROR_MESSAGE,
 } from "./constants";
+import "antd/dist/antd.css";
+import "react-datepicker/dist/react-datepicker.css";
+
+const { Option } = Select;
 
 const schema = yup.object().shape({
   numericInput: yup.number().required(REQUIRED_ERROR_MESSAGE),
+  // ideally here should be all the useEffects logic, but I feel I spent
+  // more time than needed to figure it out. This can definitely be improved and 
+  // reduce all the useEffect logic that might not be the easiest to follow up.
+  // Because of this, it's also more error prone. Happy to discuss and find out
 });
 
 const FormPage: React.FunctionComponent = () => {
@@ -45,8 +52,6 @@ const FormPage: React.FunctionComponent = () => {
       navigate("/table");
     }
   };
-
-  const { Option } = Select;
 
   const textInputValue: string | undefined = useWatch({
     name: "textInput",
@@ -135,14 +140,13 @@ const FormPage: React.FunctionComponent = () => {
           }}
         />
 
-        <Controller
+        <Controller // these can be further improved to be separate Form Components with label as prop
           name="textInput"
           control={control}
           render={({ field }) => {
             return (
               <>
-                <label> Input text </label>
-                <br />
+                <label> Input text </label> 
                 <Input {...field} disabled={isFormDisabled} />
                 <ValidationError>{errors?.textInput?.message}</ValidationError>
               </>
@@ -156,7 +160,12 @@ const FormPage: React.FunctionComponent = () => {
             return (
               <>
                 <label> Input number </label>
-                <Input {...field} type="number" disabled={isFormDisabled}   data-testid="numericInput"/>
+                <Input
+                  {...field}
+                  type="number"
+                  disabled={isFormDisabled}
+                  data-testid="numericInput"
+                />
                 <ValidationError>
                   {errors?.numericInput?.message}
                 </ValidationError>
@@ -164,18 +173,18 @@ const FormPage: React.FunctionComponent = () => {
             );
           }}
         />
-
-        <Controller
+        
+        <Controller 
           name="startDate"
           control={control}
           render={({ field }) => {
             return (
               <>
                 <label> Start </label>
-                <DatePicker
+                <DatePicker // have used react-datepicker instead of ant design because of  https://github.com/ant-design/ant-design/issues/34952
                   dateFormat="dd/MM/yyyy"
                   todayButton="Today"
-                  placeholderText="Select Date"
+                  placeholderText="Select Start Date"
                   onChange={(date: Date) => {
                     field.onChange(date);
 
@@ -186,6 +195,7 @@ const FormPage: React.FunctionComponent = () => {
                   selected={field.value}
                   endDate={endDateValue || undefined}
                   disabled={isFormDisabled}
+                  data-testid="startDate"
                 />
 
                 <ValidationError>{errors?.startDate?.message}</ValidationError>
@@ -204,13 +214,14 @@ const FormPage: React.FunctionComponent = () => {
                 <DatePicker
                   dateFormat="dd/MM/yyyy"
                   todayButton="Today"
-                  placeholderText="Select Date"
+                  placeholderText="Select End Date"
                   onChange={(date: Date) => {
                     field.onChange(date);
                   }}
                   selected={field.value}
                   minDate={startDateValue || undefined}
                   disabled={isFormDisabled}
+                  data-testid="endDate"
                 />
 
                 <ValidationError>{errors?.endDate?.message}</ValidationError>
@@ -222,6 +233,7 @@ const FormPage: React.FunctionComponent = () => {
           htmlType="submit"
           color={submitButtonColor}
           disabled={isFormDisabled}
+          data-testId="submit"
         >
           Submit
         </StyledButton>
@@ -232,4 +244,4 @@ const FormPage: React.FunctionComponent = () => {
 
 export default FormPage;
 
-// have used react-datepicker instead of ant design because of  https://github.com/ant-design/ant-design/issues/34952
+

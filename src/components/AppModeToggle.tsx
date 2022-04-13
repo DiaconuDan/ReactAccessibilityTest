@@ -1,12 +1,12 @@
 import React from "react";
-import { useAppMode, AppMode } from "../App";
+import { useAppMode } from "../context/index";
+import { AppMode} from "../context/types" ;
 import { Switch } from "antd";
 import  styled  from 'styled-components' ;
 
 export const ToggleWrapper = styled.div`
     padding-bottom: 15px;
 `;
-
 
 const AppModeToggle: React.FunctionComponent = () => {
   const { appMode, setAppMode } = useAppMode();
